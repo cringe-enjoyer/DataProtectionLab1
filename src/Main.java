@@ -8,49 +8,43 @@ public class Main {
         com.add("E:\\Git\\usr\\bin\\openssl.exe");
         com.add("dgst");
         com.add("-sha1");
-        com.add("F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing.txt");
-        for (int i = 0; i < 20; i++) {
+        com.add("F:\\OpenSSLLabs\\Lab1\\res\\leasing.txt");
+        for (int i = 0; i < 40; i++) {
             trick(i);
             com.add("dgst");
             com.add("-sha1");
-            com.add("F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing" + i + ".txt");
+            com.add("F:\\OpenSSLLabs\\Lab1\\res\\leasing" + i + ".txt");
         }
         process.command(com);
-        /*process.command("E:\\Git\\usr\\bin\\openssl.exe", "dgst", "-sha1",
-                "F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing.txt",
-                "dgst", "-sha1", "F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing1.txt",
-                "dgst", "-sha1", "F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing2.txt",
-                "dgst", "-sha1", "F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing3.txt");*/
-        process.redirectOutput(new File("F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\out.txt"));
+        process.redirectOutput(new File("F:\\OpenSSLLabs\\Lab1\\res\\out.txt"));
         process.start();
     }
 
     private static void trick(int i) {
-        StringBuilder sb = new StringBuilder();
+        boolean check = false;
+        int j = 0;
         try (BufferedReader reader = new BufferedReader(
-                new FileReader("F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing" + (i == 0 ? "" : i) + ".txt"))) {
+                new FileReader("F:\\OpenSSLLabs\\Lab1\\res\\leasing" + (i == 0 ? "" : i) + ".txt"))) {
             String line = reader.readLine();
-            FileWriter writer = new FileWriter("F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing" + (i + 1) + ".txt");
-
-
+            FileWriter writer = new FileWriter("F:\\OpenSSLLabs\\Lab1\\res\\leasing" + (i + 1) + ".txt");
             while(line != null) {
-                sb.append(line).append("\n");
-                line = line.replaceAll(" ", " ");
+                if (line.contains(" ") && i == j) {
+                    line = line.replace(" ", "  ");
+                    line = line.replace(" ", "\b");
+                    check = true;
+                }
+                else if (!check && i < j && line.contains(" ")) {
+                    line = line.replace(" ", "  ");
+                    line = line.replace(" ", "\b");
+                    check = true;
+                }
                 writer.write(line + "\n");
                 line = reader.readLine();
+                j++;
             }
             writer.close();
         } catch (Exception e) {
             System.out.println(e);
         }
-/*        String text = sb.toString();
-        text = text.replaceAll(" ", " ");
-        if (i % 2 == 0)
-            text = text.replaceAll("а", "а");
-        try(FileWriter writer = new FileWriter("F:\\OpenSSLLabs\\Lab1\\Lab1\\res\\leasing" + (i + 1) + ".txt")) {
-            writer.write(text);
-        } catch (Exception e) {
-            System.out.println(e);
-        }*/
     }
 }
